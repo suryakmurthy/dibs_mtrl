@@ -40,6 +40,7 @@ class Experiment(multitask.Experiment):
         return eval_modes_to_env_ids
 
     def build_envs(self):
+        print("Checking environment building")
         benchmark = hydra.utils.instantiate(self.config.env.benchmark)
 
         envs = {}

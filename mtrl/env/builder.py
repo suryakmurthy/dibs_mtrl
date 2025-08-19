@@ -6,6 +6,9 @@ import mtenv
 from gym.vector.async_vector_env import AsyncVectorEnv
 
 from mtrl.env.vec_env import MetaWorldVecEnv, VecEnv
+
+from mtrl.env.vec_env_transformed import MetaWorldVecEnv as MetaworldEnvTransformed
+
 from mtrl.utils.types import ConfigType
 
 
@@ -48,6 +51,8 @@ def build_metaworld_vec_env(
     mode: str,
     env_id_to_task_map: Optional[Dict[str, "metaworld.Task"]],  # type: ignore[name-defined] # noqa: F821
 ) -> Tuple[AsyncVectorEnv, Optional[Dict[str, Any]]]:
+    transform_flag = config.get("experiment", {}).get("transform_flag", False)
+    print("Transformed? :", transform_flag)
     from mtenv.envs.metaworld.env import (
         get_list_of_func_to_make_envs as get_list_of_func_to_make_metaworld_envs,
     )
@@ -68,10 +73,18 @@ def build_metaworld_vec_env(
         "ids": list(range(num_tasks)),
         "mode": [mode for _ in range(num_tasks)],
     }
-    env = MetaWorldVecEnv(
-        env_metadata=env_metadata,
-        env_fns=funcs_to_make_envs,
-        context="spawn",
-        shared_memory=False,
-    )
+    if transform_flag:
+        env = MetaworldEnvTransformed(
+            env_metadata=env_metadata,
+            env_fns=funcs_to_make_envs,
+            context="spawn",
+            shared_memory=False,
+        )
+    else:
+        env = MetaWorldVecEnv(
+            env_metadata=env_metadata,
+            env_fns=funcs_to_make_envs,
+            context="spawn",
+            shared_memory=False,
+        )
     return env, env_id_to_task_map

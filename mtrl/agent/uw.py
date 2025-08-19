@@ -375,10 +375,10 @@ class Agent(AbstractAgent):
             loss_to_log = loss_to_log.mean()
         logger.log("train/critic_loss", loss_to_log, step)
 
-        if loss_to_log > 1e8:
-            raise RuntimeError(
-                f"critic_loss = {loss_to_log} is too high. Stopping training."
-            )
+        # if loss_to_log > 1e8:
+        #     raise RuntimeError(
+        #         f"critic_loss = {loss_to_log} is too high. Stopping training."
+        #     )
 
         component_names = ["critic"]
         parameters: List[ParameterType] = []

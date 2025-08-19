@@ -44,6 +44,7 @@ def get_command(
         "experiment.init_steps": init_steps,
         "experiment.num_train_steps": num_train_steps,
         "experiment.eval_freq": eval_freq,
+        "experiment.transform_flag": True,
         "metrics": "hipbmdp",
         "agent.multitask.num_envs": num_envs,
         "agent.multitask.should_use_disentangled_alpha": should_use_disentangled_alpha,
