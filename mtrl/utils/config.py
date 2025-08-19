@@ -136,7 +136,21 @@ def _process_setup_config(config: ConfigType) -> ConfigType:
     if setup_config.base_path is None:
         setup_config.base_path = hydra.utils.get_original_cwd()
     if not setup_config.debug.should_enable:
-        setup_config.id = f"{hashlib.sha224(setup_config.description.encode()).hexdigest()}_issue_{setup_config.git.issue_id}_seed_{setup_config.seed}"
+        #setup_config.id = f"{hashlib.sha224(setup_config.description.encode()).hexdigest()}_issue_{setup_config.git.issue_id}_seed_{setup_config.seed}"
+        if "cagrad" in config.agent.name:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_"+\
+                    f"{config.agent.builder.agent_cfg.cagrad_method}_"+\
+                    f"c{config.agent.builder.agent_cfg.cagrad_c}_seed_{setup_config.seed}"
+        elif "famo" in config.agent.name:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_gamma{config.agent.builder.gamma}_wlr{config.agent.builder.w_lr}_seed_{setup_config.seed}"
+        elif "uw" in config.agent.name:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_wlr{config.agent.builder.w_lr}_seed_{setup_config.seed}"
+        elif "nashmtl" in config.agent.name:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_every{config.agent.builder.update_weights_every}_seed_{setup_config.seed}"
+        elif "dibs" in config.agent.name:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_radius{config.agent.builder.radius}_seed_{setup_config.seed}"
+        else:
+            setup_config.id = f"{config.env.name}_{config.agent.name}_seed_{setup_config.seed}"
 
     current_commit_id = utils.get_current_commit_id()
     if not setup_config.git.commit_id:
